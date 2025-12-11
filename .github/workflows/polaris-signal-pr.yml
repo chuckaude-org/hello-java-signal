@@ -35,5 +35,6 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
       run: |
         set -ex
-        CHANGESET=$(git diff --name-only -r HEAD^1 HEAD | xargs)
-        $HOME/.blackduck/bridge/tools/signal/*/signal --llm-uri ${{ vars.LLM_URL }} --llm-key ${{ secrets.LLM_KEY }} src/main/java/CommandInjection.java
+        #CHANGESET=$(git diff --name-only -r HEAD^1 HEAD | xargs)
+        #$HOME/.blackduck/bridge/tools/signal/*/signal --llm-uri ${{ vars.LLM_URL }} --llm-key ${{ secrets.LLM_KEY }} $CHANGESET
+        $HOME/.blackduck/bridge/tools/signal/*/signal --llm-uri ${{ vars.LLM_URL }} --llm-key ${{ secrets.LLM_KEY }} --git-diff
