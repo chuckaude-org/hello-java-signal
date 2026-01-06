@@ -1,6 +1,6 @@
 # example workflow for Polaris scans using the Black Duck Security Scan Action
 # https://github.com/marketplace/actions/black-duck-security-scan
-name: polaris-ss-action
+name: polaris-signal
 on:
   push:
     branches: [ main, master, develop, stage, release ]
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 jobs:
   polaris:
-    runs-on: sdc-sal-apps316
+    runs-on: linux64-vpn
     steps:
     - name: Checkout Source
       uses: actions/checkout@v6
@@ -30,8 +30,8 @@ jobs:
         polaris_assessment_types: AI
         polaris_application_name: chuckaude-hello-java
         polaris_prComment_enabled: false
-        polaris_reports_sarif_create: false
-        polaris_upload_sarif_report: false
+        polaris_reports_sarif_create: true
+        polaris_upload_sarif_report: true
         coverity_build_command: mvn -B -DskipTests package
         coverity_clean_command: mvn -B clean
         github_token: ${{ secrets.GITHUB_TOKEN }}
