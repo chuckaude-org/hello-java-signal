@@ -1,0 +1,30 @@
+name: signal-bridge
+on:
+  push:
+    branches: [ main, master, develop, stage, release ]
+  workflow_dispatch:
+jobs:
+  signal:
+    runs-on: ubuntu-latest
+    env:
+      BRIDGE_SIGNAL_LLM_URI: ${{ vars.LLM_URL }}
+      BRIDGE_SIGNAL_LLM_KEY: ${{ secrets.LLM_KEY }}
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v6
+    - name: Signal Scan
+      run: |
+        curl -fLsS -o bridge.zip ${{ vars.BRIDGECLI_LINUX64 }} && unzip -qo -d ${{ runner.temp }} bridge.zip && rm -f bridge.zip
+        ${{ runner.temp }}/bridge-cli-bundle-linux64/bridge-cli --verbose --stage signal signal.mode=PROJECT \
+          signal.args='--llm-model claude-sonnet-4-6'
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: .bridge/signal-controller/results.sarif
+#    - name: Save Logs
+#      if: always()
+#      uses: actions/upload-artifact@v7
+#      with:
+#        name: bridge-logs
+#        path: ${{ github.workspace }}/.bridge
+#        include-hidden-files: true
